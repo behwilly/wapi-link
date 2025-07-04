@@ -304,7 +304,7 @@ fonts-noto-color-emoji
 
 
 
-    ```bash
+```bash
 
     cd /var/www/ # 替換為你的目標目錄
 
@@ -320,7 +320,7 @@ fonts-noto-color-emoji
 
     cd wapi-link/
 
-    ```
+```
 
 
 
@@ -328,11 +328,11 @@ fonts-noto-color-emoji
 
 
 
-    ```bash
+```bash
 
     npm install --production
 
-    ```
+```
 
 
 
@@ -348,7 +348,7 @@ fonts-noto-color-emoji
 
 
 
-    ```bash
+```bash
 
     # 假設你在 /var/www/ 下創建一個獨立的 webhook-receiver 資料夾
 
@@ -370,7 +370,7 @@ fonts-noto-color-emoji
 
     npm install express
 
-    ```
+```
 
 
 
@@ -386,23 +386,23 @@ fonts-noto-color-emoji
 
       * 在 VPS 上執行這個命令，找到 Chromium 的實際路徑：
 
-        ```bash
+```bash
 
         which chromium || which chromium-browser # 複製它的輸出！通常是 /snap/bin/chromium
 
-        ```
+    ```
 
       * **編輯你 VPS 上的 `index.js` 檔案**：
 
-        ```bash
+```bash
 
         nano index.js # 開啟 index.js
 
-        ```
+    ```
 
         修改 `puppeteer` 配置中的 `executablePath`：
 
-        ```javascript
+    ```javascript
 
         // index.js (部分程式碼)
 
@@ -430,7 +430,7 @@ fonts-noto-color-emoji
 
         }
 
-        ```
+    ```
 
         **保存檔案** (Ctrl+X, Y, Enter)。
 
@@ -442,11 +442,11 @@ fonts-noto-color-emoji
 
 
 
-    ```bash
+```bash
 
     sudo nano /etc/environment
 
-    ```
+```
 
 
 
@@ -454,13 +454,13 @@ fonts-noto-color-emoji
 
 
 
-    ```
+```
 
     API_KEY="your_vps_api_key_here"              # 你在 VPS 上使用的 API 密鑰
 
     WEBHOOK_BASE_URL="http://localhost:5000"     # Webhook 接收器在同一個 VPS 上運行
 
-    ```
+```
 
 
 
@@ -478,13 +478,13 @@ fonts-noto-color-emoji
 
 
 
-    ```bash
+```bash
 
     cd /var/www/wapi-link # 進入 wapi-link 專案目錄
 
     nano start_app.sh
 
-    ```
+```
 
 
 
@@ -492,7 +492,7 @@ fonts-noto-color-emoji
 
 
 
-    ```bash
+```bash
 
     #!/bin/bash
 
@@ -506,7 +506,7 @@ fonts-noto-color-emoji
 
     xvfb-run --server-args="-screen 0 1024x768x24" node index.js
 
-    ```
+```
 
 
 
@@ -516,11 +516,11 @@ fonts-noto-color-emoji
 
 
 
-    ```bash
+```bash
 
     chmod +x start_app.sh
 
-    ```
+```
 
 
 
@@ -530,7 +530,7 @@ fonts-noto-color-emoji
 
 
 
-    ```bash
+```bash
 
     # 讓 PM2 日誌目錄可寫 (通常在 /root/.pm2/logs/ 如果你用 root 運行)
 
@@ -554,7 +554,7 @@ fonts-noto-color-emoji
 
     sudo chmod -R 777 /var/www/webhook-receiver/received_media
 
-    ```
+```
 
 
 
@@ -566,13 +566,13 @@ fonts-noto-color-emoji
 
 
 
-    ```bash
+```bash
 
     cd /var/www/webhook-receiver/ # 進入 webhook_receiver.js 所在目錄
 
     pm2 start webhook_receiver.js --name "webhook-receiver" --time --env production
 
-    ```
+```
 
 
 
@@ -580,13 +580,13 @@ fonts-noto-color-emoji
 
 
 
-    ```bash
+```bash
 
     cd /var/www/wapi-link/ # 進入 wapi-link 專案目錄
 
     pm2 start start_app.sh --name "wapi-link" --time --interpreter=bash # 指定 interpreter 是 bash
 
-    ```
+```
 
 
 
@@ -594,13 +594,13 @@ fonts-noto-color-emoji
 
 
 
-    ```bash
+```bash
 
     pm2 save
 
     pm2 startup
 
-    ```
+```
 
 
 
@@ -614,11 +614,11 @@ fonts-noto-color-emoji
 
 1.  查看 WAPI Link 的日誌以獲取 QR Code：
 
-    ```bash
+```bash
 
     pm2 logs wapi-link
 
-    ```
+```
 
 2.  用你的手機 WhatsApp 掃描日誌中顯示的 QR Code 進行登錄。
 
