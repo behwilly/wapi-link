@@ -1,0 +1,33 @@
+{
+  "name": "wapi-link",
+  "version": "1.0.0",
+  "description": "A custom WhatsApp Gateway built with Node.js and whatsapp-web.js, featuring API for sending messages and Webhooks for receiving messages.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "jest",  
+    "test:watch": "jest --watch" 
+  },
+  "keywords": [
+    "whatsapp",
+    "gateway",
+    "api",
+    "webhook",
+    "nodejs",
+    "whatsapp-web.js"
+  ],
+  "author": "Beh Willy",  
+  "license": "ISC", 
+  "dependencies": {
+    "axios": "^1.10.0",
+    "dotenv": "^17.0.1",
+    "express": "^5.1.0",
+    "qrcode-terminal": "^0.12.0",
+    "whatsapp-web.js": "^1.31.0",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^9.0.0"
+  }
+}
