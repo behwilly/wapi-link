@@ -43,10 +43,9 @@
 
 1.  **克隆專案**：
     ```bash
-    git clone [https://github.com/你的GitHub用戶名/wapi-link.git](https://github.com/你的GitHub用戶名/wapi-link.git)
+    git clone [https://github.com/behwilly/wapi-link.git] (https://github.com/behwilly/wapi-link.git)
     cd wapi-link
     ```
-    **請將 `你的GitHub用戶名` 替換為你的實際 GitHub 用戶名。**
 
 2.  **安裝依賴**：
     ```bash
