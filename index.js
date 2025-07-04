@@ -76,7 +76,7 @@ const client = new Client({
         dataPath: './.wwebjs_auth' // 指定會話數據的根目錄
     }),
     puppeteer: {
-        executablePath: '/usr/lib/chromium-browser/chromium-browser', // <-- UPDATE THIS LINE
+        executablePath: '/usr/bin/chromium-browser', // <-- PASTE THE PATH HERE
         headless: process.env.NODE_ENV === 'production' ? true : false,
         args: [
             '--no-sandbox',
