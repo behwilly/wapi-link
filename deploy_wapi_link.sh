@@ -4,13 +4,13 @@
 GITHUB_USERNAME=""            # 你的 GitHub 用戶名
 GITHUB_REPO="wapi-link"                           # 你的 GitHub 倉庫名稱 (不需要 .git)
 GITHUB_PAT=""                      # 你的 Personal Access Token (PAT)
-VPS_USER="root/"                          # 你的 VPS 登錄用戶名 (例如 ubuntu, admin, root)
+VPS_USER="root"                          # 你希望 PM2 運行應用程式的用戶名 (例如 ubuntu, admin, 或 root)
 
-DEPLOY_DIR="/www/wwwroot"                             # 專案部署的基礎目錄
-WAPI_LINK_DIR="$DEPLOY_DIR/$GITHUB_REPO"          # WAPI Link 專案的最終路徑
-WEBHOOK_RECEIVER_DIR="$DEPLOY_DIR/webhook-receiver" # Webhook 接收器專案的最終路徑
+DEPLOY_BASE_DIR="/opt"                            # 專案部署的基礎目錄，建議用 /opt 而不是 /var/www
+WAPI_LINK_DIR="$DEPLOY_BASE_DIR/$GITHUB_REPO"     # WAPI Link 專案的最終路徑
+WEBHOOK_RECEIVER_DIR="$DEPLOY_BASE_DIR/webhook-receiver" # Webhook 接收器專案的最終路徑
 
-VPS_API_KEY="b149637b-69d7-4f68-93e0-0292a3c3566b"                    # 你為 API 設定的密鑰
+VPS_API_KEY="YOUR_VPS_API_KEY"                    # 你為 API 設定的密鑰 (請替換)
 WEBHOOK_BASE_URL="http://localhost:5000"          # Webhook 接收器 URL (通常是 localhost:5000 如果在同一個 VPS)
 
 # --- Chromium executablePath (腳本會自動檢測並修改 index.js) ---
@@ -101,16 +101,11 @@ git clone "https://$GITHUB_PAT@github.com/$GITHUB_USERNAME/$GITHUB_REPO.git" || 
 
 cd "$WAPI_LINK_DIR" || { echo "❌ 無法進入 WAPI Link 專案目錄！"; exit 1; }
 
-# === 動態移除 package.json 中的 devDependencies (更健壯的方式) ===
+# === 動態移除 package.json 中的 devDependencies ===
 echo "動態移除 package.json 中的 devDependencies 以確保生產部署成功..."
-# 使用 sed 找到 devDependencies 區塊並刪除
-# 這個 sed 命令會找到 "devDependencies": { ... } 整個區塊並刪除
-# 它會處理多行和嵌套結構，只要 devDependencies 是頂層鍵
-sed -i '/"devDependencies": {/,/^}$/ { /"devDependencies": {/!d; /^}$/!d; }' package.json
-# 如果 devDependencies 是空物件，可能只有一行，再處理一下
-sed -i '/"devDependencies": {},/d' package.json
+jq 'del(.devDependencies)' package.json > package.json.tmp && mv package.json.tmp package.json || \
+{ echo "❌ 無法移除 package.json 中的 devDependencies！"; exit 1; }
 echo "devDependencies 已從 package.json 移除。"
-# =========================================================
 
 # 安裝 Node.js 生產依賴
 rm -rf node_modules package-lock.json # 清理舊的依賴
@@ -175,23 +170,16 @@ app.listen(port, () => {
 npm install express || { echo "❌ Webhook Receiver 依賴安裝失敗！"; exit 1; }
 
 
-echo "--- 6. 設定 WAPI Link 核心設定 ---"
-cd "$WAPI_LINK_DIR" || { echo "❌ 無法進入 WAPI Link 專案目錄！"; exit 1; }
-
-# 修改 index.js 中的 executablePath 和 headless 設定
-# 使用 perl -pi -e 進行跨行和更複雜的替換
-# 假設 index.js 中有 'executablePath: ' 和 'headless: ' 的模式
-perl -pi -e "s|^(.*executablePath: ).*|${1}'$CHROMIUM_EXEC_PATH',|g" index.js || \
-echo "❌ 警告：未找到 executablePath 行進行替換。請確保 index.js 中有 'executablePath: ' 模式。"
-
-perl -pi -e "s|headless: process.env.NODE_ENV === 'production' \? true : false,|headless: false,|g" index.js || \
-echo "❌ 警告：未找到 headless 行進行替換。"
-
+echo "--- 6. 設定 WAPI Link 啟動腳本 ---"
 # 創建 WAPI Link 啟動腳本 (start_app.sh)
+# index.js 中的 executablePath 和 headless 設定應已在 GitHub 上配置正確。
+cd "$WAPI_LINK_DIR" || { echo "❌ 無法進入 WAPI Link 專案目錄！"; exit 1; }
+echo '#!/bin/bash
+
+# 創建 WAPI Link 啟動腳本 (start_app.sh) (KEEP THIS PART)
+cd "$WAPI_LINK_DIR"
 echo '#!/bin/bash
 # 環境變數會從 /etc/environment 或 PM2 的 --env 設置載入
-
-# 這是運行你的 Node.js 應用程式在 Xvfb 虛擬顯示器中的命令
 xvfb-run --server-args="-screen 0 1024x768x24" node index.js' > start_app.sh
 chmod +x start_app.sh
 
