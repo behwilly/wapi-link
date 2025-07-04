@@ -27,7 +27,5 @@
     "winston": "^3.17.0"
   },
   "devDependencies": {
-    "jest": "^29.7.0",
-    "supertest": "^8.0.0"
   }
 }
