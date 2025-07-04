@@ -76,12 +76,11 @@ const client = new Client({
         dataPath: './.wwebjs_auth' // 指定會話數據的根目錄
     }),
     puppeteer: {
-        // executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
-        headless: process.env.NODE_ENV === 'production' ? true : false, // 在生產環境下無頭模式運行
+        executablePath: '/usr/lib/chromium-browser/chromium-browser', // <-- UPDATE THIS LINE
+        headless: process.env.NODE_ENV === 'production' ? true : false,
         args: [
-            '--no-sandbox',           // 某些環境（如 Docker）中可能需要
-            '--disable-setuid-sandbox' // 某些環境中可能需要
-            // 其他 Puppeteer 參數可以在這裡添加
+            '--no-sandbox',
+            '--disable-setuid-sandbox'
         ]
     }
 });
